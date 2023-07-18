@@ -1,0 +1,10 @@
+resources:
+- everything-allowed-deployment.yaml
+- everything-allowed-svc.yaml
+
+namePrefix:
+  kustom-
+
+nameSuffix:
+  -badpod
+
